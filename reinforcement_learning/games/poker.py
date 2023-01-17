@@ -1,0 +1,66 @@
+import random
+
+#Setup the environment
+#Create a deck of cards
+deck = [1,2,3,4,5,6,7,8,9,10,11,12,13] * 4
+
+#Create a state and action space
+state = []
+action = [0,1,2,3] # 0 = fold, 1 = call, 2 = raise, 3 = all in
+
+#Create a rewards array
+rewards = [0,1,-1] # 0 = draw, 1 = win, -1 = lose
+
+#Create a Q-table
+Q_table = [[0.0,0.0,0.0,0.0] for _ in range(len(state)*len(action))]
+
+#Define some parameters
+alpha = 0.1 # learning rate
+gamma = 0.6 # discount factor
+epsilon = 0.1 # exploration rate
+
+#Define some functions
+def choose_action(state):
+    action = 0
+    if random.uniform(0,1) < epsilon:
+        action = random.choice(action)
+    else:
+        action = max(Q_table[state], key=Q_table[state].get)
+    return action
+
+def take_action(action):
+    #Execute the action
+    reward = 0
+    if action == 0:
+        reward = rewards[0] # draw
+    elif action == 1:
+        reward = rewards[1] # win
+    elif action == 2:
+        reward = rewards[2] # lose
+    elif action == 3:
+        reward = rewards[3] # all in
+    return reward
+
+#Define the learning policy
+def learn(state, action, reward):
+    old_value = Q_table[state][action]
+    Q_table[state][action] = (1-alpha) * old_value + alpha * (reward + gamma * max(Q_table[state]))
+
+#Main loop
+for i in range(1000):
+    #Reset the environment
+    state = random.choice(deck)
+    done = False
+    while not done:
+        #Choose an action
+        action = choose_action(state)
+        #Take the action and get the reward
+        reward = take_action(action)
+        #Update the Q-table
+        learn(state, action, reward)
+        if reward == -1:
+            done = True
+        state = random.choice(deck)
+
+#Print the final Q-table
+print(Q_table)
