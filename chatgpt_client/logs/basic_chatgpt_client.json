@@ -1,0 +1,20 @@
+[
+  {
+    "createdAt": 1673791826813,
+    "completionMode": "freeform",
+    "prompt": "write a chatgpt api client with an interactive interpreter prompt that takes input from the user and sends it to openai in the programming language go",
+    "suffix": null,
+    "instruction": "",
+    "completion": "\n\npackage main\n\nimport (\n\t\"encoding/json\"\n\t\"fmt\"\n\t\"io/ioutil\"\n\t\"net/http\"\n\t\"os\"\n\t\"strings\"\n)\n\nconst openaiEndpoint = \"https://api.openai.com/v1/engines/chatbot/completions\"\n\n// RequestBody is the json structure for the request body sent to OpenAI\ntype RequestBody struct {\n\tPrompt string `json:\"prompt\"`\n\tMaxTokens int `json:\"max_tokens\"`\n\tTemperature float32 `json:\"temperature\"`\n\tTopP float32 `json:\"top_p\"`\n\tN int `json:\"n\"`\n}\n\nfunc main() {\n\tfmt.Println(\"Welcome to OpenAI ChatGPT API Client\")\n\n\t// Get the OpenAI API key\n\tapiKey := os.Getenv(\"OPENAI_API_KEY\")\n\tif apiKey == \"\" {\n\t\tfmt.Println(\"Please provide the OpenAI API key as an environment variable\")\n\t\tos.Exit(1)\n\t}\n\n\t// Start the interactive prompt\n\tfmt.Println(\"Type your query below and press enter to submit:\")\n\tfor {\n\t\t// Read the input from the user\n\t\tvar query string\n\t\tfmt.Scanln(&query)\n\n\t\t// Create the request body\n\t\trequestBody := RequestBody{\n\t\t\tPrompt: query,\n\t\t\tMaxTokens: 100,\n\t\t\tTemperature: 0.7,\n\t\t\tTopP: 0.9,\n\t\t\tN: 3,\n\t\t}\n\n\t\t// Encode the request body as json\n\t\trequestBodyBytes, err := json.Marshal(requestBody)\n\t\tif err != nil {\n\t\t\tfmt.Printf(\"Error encoding json: %v\\n\", err)\n\t\t\tos.Exit(1)\n\t\t}\n\n\t\t// Create the http client\n\t\tclient := &http.Client{}\n\n\t\t// Create the request\n\t\treq, err := http.NewRequest(\"POST\", openaiEndpoint, strings.NewReader(string(requestBodyBytes)))\n\t\tif err != nil {\n\t\t\tfmt.Printf(\"Error creating http request: %v\\n\", err)\n\t\t\tos.Exit(1)\n\t\t}\n\n\t\t// Add the API key to the request\n\t\treq.Header.Add(\"Authorization\", fmt.Sprintf(\"Bearer %s\", apiKey))\n\n\t\t// Send the request\n\t\tresp, err := client.Do(req)\n\t\tif err != nil {\n\t\t\tfmt.Printf(\"Error sending http request: %v\\n\", err)\n\t\t\tos.Exit(1)\n\t\t}\n\n\t\t// Read the response\n\t\trespBytes, err := ioutil.ReadAll(resp.Body)\n\t\tif err != nil {\n\t\t\tfmt.Printf(\"Error reading http response: %v\\n\", err)\n\t\t\tos.Exit(1)\n\t\t}\n\n\t\t// Decode the response\n\t\tvar respBody struct {\n\t\t\tChoices []struct {\n\t\t\t\tText string `json:\"text\"`\n\t\t\t\tIndex int `json:\"index\"`\n\t\t\t} `json:\"choices\"`\n\t\t}\n\t\terr = json.Unmarshal(respBytes, &respBody)\n\t\tif err != nil {\n\t\t\tfmt.Printf(\"Error decoding response: %v\\n\", err)\n\t\t\tos.Exit(1)\n\t\t}\n\n\t\t// Print the response\n\t\tfmt.Println(\"Response:\")\n\t\tfor _, c := range respBody.Choices {\n\t\t\tfmt.Printf(\"%d: %s\\n\", c.Index, c.Text)\n\t\t}\n\t}\n}",
+    "stopSequence": [],
+    "startSequence": "",
+    "restartSequence": "",
+    "model": "text-davinci-003",
+    "responseLength": 3959,
+    "temperature": 0.7,
+    "topP": 1,
+    "frequencyPenalty": 0,
+    "presencePenalty": 0,
+    "bestOf": 1
+  }
+]
