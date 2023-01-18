@@ -607,3 +607,4 @@ for e in range(num_episodes):
     dealer_cards = []
 
     # Deal Cards
+",,"","","","text-davinci-003","256","0.7","1","0","0","1"
